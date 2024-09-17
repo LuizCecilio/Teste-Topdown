@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TesteTopDown.Models;
 using TesteTopDownDomain.Contracts.Interface;
@@ -7,6 +8,7 @@ using TesteTopDownDomain.Entities;
 namespace TesteTopDown.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
 
     public class TaskController : ControllerBase
@@ -45,6 +47,7 @@ namespace TesteTopDown.Controllers
             return Ok("Tarefa Excluida com sucesso.");
         }
 
+        [AllowAnonymous]
         [HttpGet("Consultar")]
         public IActionResult ObterTask(int id)
         {
