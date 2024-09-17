@@ -1,0 +1,74 @@
+CREATE OR REPLACE PACKAGE dev.processa_pedido AS
+  TYPE t_produto IS RECORD (
+    productname varchar(100),
+    quantity integer,
+    price decimal,    
+  );
+  
+  TYPE t_lista_produtos IS TABLE OF t_produto INDEX BY PLS_INTEGER;
+  
+  PROCEDURE processar_pedido (
+    p_xml_pedido IN CLOB,
+    p_lista_erros OUT t_lista_produtos
+  );
+  
+  FUNCTION obter_itens_pedido (
+    productname IN varchar(100)
+  ) RETURN t_lista_produtos;
+END processa_pedido;
+/
+
+CREATE OR REPLACE PACKAGE BODY dev.processa_pedido AS
+  PROCEDURE processar_pedido (
+    p_xml_pedido IN CLOB,
+    p_lista_erros OUT t_lista_produtos
+  ) AS
+    -- Variáveis locais
+    l_xml XMLTYPE := XMLTYPE(p_xml_pedido);
+    l_lista_produtos t_lista_produtos;
+    l_produto t_produto;
+  BEGIN
+    
+    FOR cur IN (SELECT /*+ PARALLEL */ * FROM TABLE(XMLSEQUENCE(EXTRACT(l_xml, '/order/items'))) t) LOOP
+      -- Mapear os elementos XML para a estrutura t_produto
+      l_produto.productname := t.COLUMN_VALUE.EXTRACT('productname').getStringVal();
+      l_produto.quantity := t.COLUMN_VALUE.EXTRACT('quantity').getStringVal();
+      l_produto.price := t.COLUMN_VALUE.EXTRACT('price').getStringVal();
+      
+      
+      
+      IF l_lista_produtos.EXISTS(l_produto.productname) THEN
+        -- Adicionar o produto à lista de erros (implementar a lógica)
+      ELSE
+        l_lista_produtos.extend;
+        l_lista_produtos(l_lista_produtos.last) := l_produto;
+      END IF;
+    END LOOP;
+  END processar_pedido;
+  
+  FUNCTION obter_itens_pedido (
+    p_id_item IN NUMBER
+  ) RETURN t_lista_items AS
+    SELECT t_lista_items FROM(
+    SELECT OrderItemId, OrderId, ProductName, Quantity, Price 
+    FROM DEV.ORDERITEMS WHERE OrderItemId = p_id_item
+    )
+  BEGIN
+    -- ...
+  END obter_itens_pedido;
+END processa_pedido;
+
+
+
+
+
+
+DECLARE
+  l_xml CLOB := 'Seu XML aqui';
+  l_lista_erros processa_pedido.t_lista_produtos;
+BEGIN
+  dev.processa_pedido.processar_pedido(l_xml, l_lista_erros);
+  
+  
+  l_lista_produtos := dev.processa_pedido.obter_itens_pedido(123);
+END;

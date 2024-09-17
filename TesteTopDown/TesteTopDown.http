@@ -1,0 +1,6 @@
+@TesteTopDown_HostAddress = http://localhost:5099
+
+GET {{TesteTopDown_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
