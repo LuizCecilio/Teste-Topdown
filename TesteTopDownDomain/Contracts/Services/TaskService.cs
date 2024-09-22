@@ -19,8 +19,7 @@ namespace TesteTopDownDomain.Contracts.Services
 
         public async Task   Adicionar(Tarefa tarefa)
         {
-            //var user = _user.GetUserId();
-
+           
             await _taskRepository.Adicionar(tarefa);
         }
 
