@@ -22,13 +22,12 @@ namespace TesteTopDown.Controllers
             _taskRepository = taskRepository;
             _mapper = mapper;
         }
-
-
+        
         [HttpPost("Adicionar")]
-        public IActionResult AddTask(AddTaskInput input)
+        public async Task<IActionResult> AdicionarTarefa(AddTaskInput input)
         {          
 
-            _taskService.Adicionar(_mapper.Map<Tarefa>(input));
+            await _taskService.Adicionar(_mapper.Map<Tarefa>(input));
 
             return Created("Tarefa criada com sucesso.", input);
         }
@@ -48,12 +47,10 @@ namespace TesteTopDown.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Consultar")]
-        public IActionResult ObterTask(int id)
+        [HttpGet("Consultar/{id:int}")]
+        public async Task<Tarefa> ObterTask(int id)
         {
-            var task = _taskRepository.ObterTask(id);
-            return Ok(task);
-            
+            return _mapper.Map<Tarefa>(_taskRepository.ObterPorId(id));            
         }
 
 

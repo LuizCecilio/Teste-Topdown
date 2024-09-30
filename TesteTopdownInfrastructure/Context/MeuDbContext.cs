@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TesteTopDownDomain.Entities;
+using TesteTopdownInfrastructure.Mappings;
 
 namespace TesteTopdownInfrastructure.Context
 {
@@ -8,13 +9,12 @@ namespace TesteTopdownInfrastructure.Context
         public MeuDbContext(DbContextOptions<MeuDbContext> options) : base(options) { }
 
         public DbSet<Tarefa> Tarefas { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            optionsBuilder.UseSqlite(connectionString : "Data Source= Banco.sqlite");
-
-            base.OnConfiguring(optionsBuilder);
-
-
+            base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(typeof(MeuDbContext).Assembly);
+            //TaskMapping(Configure);
+            
         }
 
 

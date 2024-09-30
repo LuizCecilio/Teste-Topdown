@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TesteTopDown.Configuration;
 using TesteTopDownApplication.Common.Behaviors;
 using TesteTopDownApplication.Common.Interfaces;
 using TesteTopDownDomain.Contracts.Interface;
@@ -17,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MeuDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
+    options.EnableDetailedErrors();
 });
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.Section));
@@ -71,6 +74,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddProblemDetails();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AutoMapper;
+using Moq;
 using TesteTopDownDomain.Contracts.Interface;
 using TesteTopDownDomain.Contracts.Services;
 using TesteTopDownDomain.Entities;
@@ -9,10 +10,11 @@ namespace TesteTopApplicationTests.Common
     public class CommonTests
     {
         private TaskService taskService;
+        private IMapper _mapper;
 
-        public CommonTests()
+        public CommonTests(IMapper mapper)
         {
-            taskService = new TaskService(new Mock<ITaskRepository>().Object); 
+            taskService = new TaskService(new Mock<ITaskRepository>().Object,_mapper = mapper); 
         }
 
         [Fact]

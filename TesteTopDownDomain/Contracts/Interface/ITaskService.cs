@@ -7,10 +7,11 @@ using TesteTopDownDomain.Entities;
 
 namespace TesteTopDownDomain.Contracts.Interface
 {
-    public interface ITaskService : IDisposable
+    public interface ITaskService
     {
-        Task Adicionar(Tarefa tarefa);
+        Task<bool> Adicionar(Tarefa tarefa);
         Task Atualizar(Tarefa tarefa);
         Task Remover(int id);
+        Task<Tarefa> Obter(int id);
     }
 }
