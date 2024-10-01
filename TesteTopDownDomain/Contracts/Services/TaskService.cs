@@ -45,14 +45,7 @@ namespace TesteTopDownDomain.Contracts.Services
         
 
         public async Task<bool> Remover(int id)
-        {
-            var task = _mapper.Map<Tarefa>(await _taskRepository.ObterPorId(id));
-
-            if (task == null)
-            {
-                Notificar("Não existe a tarefa infortmada.");
-                return false;
-            }
+        {            
             await _taskRepository.Remover(id);
             return true;
         }       
