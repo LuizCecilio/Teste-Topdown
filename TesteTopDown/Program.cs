@@ -7,6 +7,7 @@ using TesteTopDownApplication.Common.Behaviors;
 using TesteTopDownApplication.Common.Interfaces;
 using TesteTopDownDomain.Contracts.Interface;
 using TesteTopDownDomain.Contracts.Services;
+using TesteTopDownDomain.Notificacoes;
 using TesteTopdownInfrastructure.Context;
 using TesteTopdownInfrastructure.Repositories;
 using TesteTopdownInfrastructure.Security.TokenGenerator;
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.EnableSensitiveDataLogging();
     options.EnableDetailedErrors();
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.Section));
@@ -41,6 +43,7 @@ builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 
 builder.Services.AddScoped<ITaskService,TaskService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<INotificador, Notificador>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -11,10 +11,11 @@ namespace TesteTopApplicationTests.Common
     {
         private TaskService taskService;
         private IMapper _mapper;
+        private INotificador _notificador;
 
-        public CommonTests(IMapper mapper)
+        public CommonTests(IMapper mapper, INotificador notificador)
         {
-            taskService = new TaskService(new Mock<ITaskRepository>().Object,_mapper = mapper); 
+            taskService = new TaskService(new Mock<ITaskRepository>().Object,_mapper = mapper, _notificador = notificador); 
         }
 
         [Fact]

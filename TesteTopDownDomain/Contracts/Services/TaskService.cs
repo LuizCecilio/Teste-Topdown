@@ -4,12 +4,12 @@ using TesteTopDownDomain.Entities;
 
 namespace TesteTopDownDomain.Contracts.Services
 {
-    public class TaskService : ITaskService
+    public class TaskService : BaseService,ITaskService
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper, INotificador notificador) : base(notificador)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
@@ -17,9 +17,11 @@ namespace TesteTopDownDomain.Contracts.Services
 
         public async Task<bool> Adicionar(Tarefa tarefa)
         {
-            if (_taskRepository.Buscar(f => f.Id == tarefa.Id).Result.Any())
+            var task = _mapper.Map<Tarefa>(await _taskRepository.ObterPorId(tarefa.Id));
+
+            if (task != null)
             {
-                //Notificar("Já existe um fornecedor com este documento informado.");
+                Notificar("Já existe uma tarefa com este id informado.");
                 return false;
             }
 
@@ -27,23 +29,33 @@ namespace TesteTopDownDomain.Contracts.Services
             return true;
         }
 
-        public async Task Atualizar(Tarefa tarefa)
+        public async Task<bool> Atualizar(Tarefa tarefa)
         {
-            
+            var task = _mapper.Map<Tarefa>(await _taskRepository.ObterPorId(tarefa.Id));
+
+            if (task == null)
+            {
+                Notificar("Não existe a tarefa informada.");
+                return false;
+            }         
 
             await _taskRepository.Atualizar(tarefa);
+            return true;
         }
         
 
-        public async Task Remover(int id)
+        public async Task<bool> Remover(int id)
         {
-            await _taskRepository.Remover(id);
-        }
+            var task = _mapper.Map<Tarefa>(await _taskRepository.ObterPorId(id));
 
-        public async Task<Tarefa> Obter(int id)
-        {
-            return _mapper.Map<Tarefa>(_taskRepository.ObterPorId(id));            
-        }
+            if (task == null)
+            {
+                Notificar("Não existe a tarefa infortmada.");
+                return false;
+            }
+            await _taskRepository.Remover(id);
+            return true;
+        }       
 
         
     }

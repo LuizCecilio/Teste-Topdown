@@ -10,8 +10,8 @@ namespace TesteTopDownDomain.Contracts.Interface
     public interface ITaskService
     {
         Task<bool> Adicionar(Tarefa tarefa);
-        Task Atualizar(Tarefa tarefa);
-        Task Remover(int id);
-        Task<Tarefa> Obter(int id);
+        Task<bool> Atualizar(Tarefa tarefa);
+        Task<bool> Remover(int id);
+        
     }
 }

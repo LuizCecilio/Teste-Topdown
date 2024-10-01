@@ -39,7 +39,7 @@ namespace TesteTopdownInfrastructure.Repositories
         }
 
         public virtual async Task Atualizar(TEntity entity)
-        {
+        {   
             DbSet.Update(entity);
             await SaveChanges();
         }
